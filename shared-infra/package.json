@@ -1,0 +1,26 @@
+{
+  "name": "@shared/infra",
+  "version": "1.0.0",
+  "description": "Shared infrastructure code for microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@mikro-orm/core": "^6.1.1",
+    "@mikro-orm/nestjs": "^6.1.1",
+    "@mikro-orm/postgresql": "^6.1.1",
+    "@nestjs/common": "^10.2.10",
+    "@nestjs/config": "^3.1.1",
+    "@nestjs/microservices": "^10.2.8",
+    "ioredis": "^5.3.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}
+

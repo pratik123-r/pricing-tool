@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Kill Port 3000",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 3000",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill Port 50051",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 50051",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill Port 50052",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 50052",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill All Service Ports",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 3000 50051 50052",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill Port 50051 (Auth Service)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 50051",
+      "problemMatcher": []
+    },
+    {
+      "label": "Kill Port 50052 (User Service)",
+      "type": "shell",
+      "command": "${workspaceFolder}/scripts/kill-ports.sh 50052",
+      "problemMatcher": []
+    }
+  ]
+}
+

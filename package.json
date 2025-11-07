@@ -1,0 +1,29 @@
+{
+  "name": "pricing-tool",
+  "version": "1.0.0",
+  "description": "Microservices architecture with NestJS",
+  "private": true,
+  "workspaces": [
+    "shared-infra",
+    "services/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "start:gateway": "npm run start:dev --workspace=services/api-gateway",
+    "start:auth": "npm run start:dev --workspace=services/auth-service",
+    "start:user": "npm run start:dev --workspace=services/user-service",
+    "start:all": "concurrently \"npm run start:gateway\" \"npm run start:auth\" \"npm run start:user\"",
+    "start:local": "./scripts/start-local.sh start",
+    "start:local:debug": "./scripts/start-local.sh debug",
+    "stop:local": "./scripts/start-local.sh stop",
+    "restart:local": "./scripts/start-local.sh restart",
+    "status:local": "./scripts/start-local.sh status",
+    "logs:local": "./scripts/start-local.sh logs"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "concurrently": "^8.2.2",
+    "typescript": "^5.3.3"
+  }
+}
+

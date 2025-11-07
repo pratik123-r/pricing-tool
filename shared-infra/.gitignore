@@ -1,0 +1,8 @@
+# Build outputs
+dist/
+
+# Compiled files should not be in src/
+# (They should only be in dist/ after building)
+src/**/*.js
+src/**/*.js.map
+src/**/*.d.ts

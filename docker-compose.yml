@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: services/api-gateway/Dockerfile
+    container_name: pricing-tool-api-gateway
+    ports:
+      - "${GATEWAY_PORT:-3000}:3000"
+    environment:
+      - GATEWAY_PORT=${GATEWAY_PORT:-3000}
+      - GATEWAY_HOST=${GATEWAY_HOST:-0.0.0.0}
+      - AUTH_SERVICE_GRPC_PORT=50051
+      - AUTH_SERVICE_GRPC_HOST=auth-service
+      - USER_SERVICE_GRPC_PORT=50052
+      - USER_SERVICE_GRPC_HOST=user-service
+      - REDIS_HOST=host.docker.internal
+      - REDIS_PORT=6379
+      - NODE_ENV=production
+    networks:
+      - pricing-tool-network
+    depends_on:
+      - auth-service
+      - user-service
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: services/auth-service/Dockerfile
+    container_name: pricing-tool-auth-service
+    ports:
+      - "${AUTH_SERVICE_GRPC_PORT:-50051}:50051"
+    environment:
+      - AUTH_SERVICE_GRPC_PORT=50051
+      - AUTH_SERVICE_GRPC_HOST=0.0.0.0
+      - USER_SERVICE_DB_HOST=host.docker.internal
+      - USER_SERVICE_DB_PORT=5432
+      - USER_SERVICE_DB_USER=postgres
+      - USER_SERVICE_DB_PASSWORD=${USER_SERVICE_DB_PASSWORD:-postgres}
+      - USER_SERVICE_DB_NAME=user_db
+      - REDIS_HOST=host.docker.internal
+      - REDIS_PORT=6379
+      - NODE_ENV=production
+    networks:
+      - pricing-tool-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  user-service:
+    build:
+      context: .
+      dockerfile: services/user-service/Dockerfile
+    container_name: pricing-tool-user-service
+    ports:
+      - "${USER_SERVICE_GRPC_PORT:-50052}:50052"
+    environment:
+      - USER_SERVICE_GRPC_PORT=50052
+      - USER_SERVICE_GRPC_HOST=0.0.0.0
+      - USER_SERVICE_DB_HOST=host.docker.internal
+      - USER_SERVICE_DB_PORT=5432
+      - USER_SERVICE_DB_USER=postgres
+      - USER_SERVICE_DB_PASSWORD=${USER_SERVICE_DB_PASSWORD:-postgres}
+      - USER_SERVICE_DB_NAME=user_db
+      - DEFAULT_USER_EMAIL=${DEFAULT_USER_EMAIL:-admin@example.com}
+      - DEFAULT_USER_PASSWORD=${DEFAULT_USER_PASSWORD:-admin123}
+      - DEFAULT_USER_FIRST_NAME=${DEFAULT_USER_FIRST_NAME:-Admin}
+      - DEFAULT_USER_LAST_NAME=${DEFAULT_USER_LAST_NAME:-User}
+      - NODE_ENV=production
+      - RUN_MIGRATIONS=${RUN_MIGRATIONS:-true}
+    networks:
+      - pricing-tool-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  pricing-tool-network:
+    driver: bridge
+
