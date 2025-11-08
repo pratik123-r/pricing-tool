@@ -28,7 +28,6 @@ export class AuthClientService implements IAuthClientService, OnModuleInit {
           catchError((error: any) => {
             this.logger.error(`gRPC call error: ${error?.code} - ${error?.message}`);
             
-            // Try to parse error details if available
             if (error?.details) {
               try {
                 const parsedDetails = typeof error.details === 'string' 
@@ -42,7 +41,6 @@ export class AuthClientService implements IAuthClientService, OnModuleInit {
                   throw actualError;
                 }
               } catch (parseError) {
-                // Parsing failed, continue with original error
               }
             }
             
@@ -51,17 +49,14 @@ export class AuthClientService implements IAuthClientService, OnModuleInit {
         )
       );
       
-      // gRPC returns proto format: { success, message, data: { token, userId } }
       if (response && response.data && response.data.token && response.data.userId) {
         return response.data;
       }
       
-      // If response already has token and userId at root (fallback), return as is
       if (response && response.token && response.userId) {
         return response as LoginResponseDto;
       }
       
-      // Fallback: return response as is
       return response as LoginResponseDto;
     } catch (error: any) {
       this.logger.error(`Login failed: ${error?.message || 'Unknown error'}`);

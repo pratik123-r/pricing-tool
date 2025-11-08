@@ -19,7 +19,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let message = 'Internal server error';
@@ -58,27 +57,22 @@ export class HttpExceptionFilter implements ExceptionFilter {
     else if (exception instanceof RpcException) {
       const errorData = exception.getError() as any;
       
-      // RpcException can contain either a string or an object
-      // If it's an object with code, message, details (from our gRPC filter)
       if (errorData && typeof errorData === 'object' && errorData.code) {
         status = this.mapErrorCodeToHttpStatus(errorData.code);
         message = errorData.message || 'Internal server error';
         code = errorData.code || 'INTERNAL_SERVER_ERROR';
         details = errorData.details;
       }
-      // Try to parse if it's a JSON string
       else if (typeof errorData === 'string') {
         try {
           const parsedError = JSON.parse(errorData);
           
-          // Handle nested error structure from gRPC filter
           if (parsedError && parsedError.error) {
             status = this.mapErrorCodeToHttpStatus(parsedError.error.code);
             message = parsedError.error.message || 'Internal server error';
             code = parsedError.error.code || 'INTERNAL_SERVER_ERROR';
             details = parsedError.error.details;
           } 
-          // Handle flat error structure
           else if (parsedError && parsedError.message) {
             message = parsedError.message;
             code = parsedError.code || 'INTERNAL_SERVER_ERROR';
@@ -88,37 +82,29 @@ export class HttpExceptionFilter implements ExceptionFilter {
             code = 'RPC_EXCEPTION';
           }
         } catch (e) {
-          // Not JSON, use as-is
           this.logger.error('Failed to parse RpcException error data as JSON', e);
           message = errorData;
           code = 'RPC_EXCEPTION';
         }
       } 
-      // Handle object error (fallback)
       else if (errorData && typeof errorData === 'object') {
         message = errorData.message || errorData.toString() || 'Internal server error';
         code = errorData.code || errorData.constructor?.name || 'RPC_EXCEPTION';
         details = errorData.details;
       }
-      // Fallback
       else {
         message = 'Internal server error';
         code = 'INTERNAL_SERVER_ERROR';
       }
     }
     // Handle gRPC client errors (from gRPC client calls)
-    // These come as Error objects with code, details, and metadata
-    // gRPC errors have structure: { code: number, message: string, details: string, metadata: object }
     else if (exception instanceof Error && (exception as any).code !== undefined) {
       const grpcError = exception as any;
       this.logger.error(`gRPC client error: ${grpcError.code} - ${grpcError.message}`);
       
-      // The details field should contain the JSON string we sent from Auth Service
       let parsedDetails: any = null;
       
-      // Try to parse details if it exists and is a string
       if (grpcError.details && typeof grpcError.details === 'string') {
-        // Check if details is our JSON format (starts with {)
         if (grpcError.details.trim().startsWith('{')) {
           try {
             parsedDetails = JSON.parse(grpcError.details);
@@ -128,7 +114,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
       }
       
-      // If details parsing failed, try to extract from message
       if (!parsedDetails && grpcError.message && grpcError.message.includes('{')) {
         try {
           const jsonMatch = grpcError.message.match(/\{.*\}/s);
@@ -140,7 +125,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         }
       }
       
-      // If we successfully parsed details, use them
       if (parsedDetails) {
         if (parsedDetails.error) {
           status = this.mapErrorCodeToHttpStatus(parsedDetails.error.code);
@@ -158,7 +142,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
           details = parsedDetails.details;
         }
       } else {
-        // Fallback: use details or message
         message = grpcError.details && typeof grpcError.details === 'string' && grpcError.details !== 'Rpc Exception'
           ? grpcError.details
           : grpcError.message || 'Internal server error';
@@ -170,7 +153,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message = exception.message || 'An error occurred';
       code = exception.constructor.name || 'Error';
       
-      // Try to extract code and details from error object
       if ((exception as any).code) {
         code = (exception as any).code;
       }
@@ -178,7 +160,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         details = (exception as any).details;
       }
     }
-    // Catch-all for any unknown exception type
     else {
       this.logger.error(`Unknown exception type: ${typeof exception}`);
       try {
@@ -225,7 +206,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
   }
 
   private mapGrpcCodeToErrorCode(grpcCode: number): string {
-    // Map gRPC status codes to error codes
     const codeMap: { [key: number]: string } = {
       0: 'OK',
       1: 'CANCELLED',

@@ -27,3 +27,8 @@ coverage
 # TypeScript build info
 *.tsbuildinfo
 
+# Build artifacts in src directories
+**/src/**/*.js
+**/src/**/*.d.ts
+**/src/**/*.js.map
+

@@ -13,7 +13,6 @@ export class UserRepository implements IUserRepository {
     @InjectRepository(User)
     private readonly repository: EntityRepository<User>,
   ) {
-    // Get EntityManager from the repository's context
     this.em = (this.repository as any).em;
   }
 

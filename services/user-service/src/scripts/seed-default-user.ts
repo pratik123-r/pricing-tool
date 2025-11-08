@@ -21,23 +21,19 @@ async function seedDefaultUser() {
   const passwordService = new PasswordService();
 
   try {
-    // Check if any users exist
     const userCount = await em.count(User);
     
     if (userCount === 0) {
       logger.log('No users found. Creating default user...');
       
-      // Default user credentials
       const defaultEmail = process.env.DEFAULT_USER_EMAIL || 'admin@example.com';
       const defaultPassword = process.env.DEFAULT_USER_PASSWORD || 'admin123';
       const defaultFirstName = process.env.DEFAULT_USER_FIRST_NAME || 'Admin';
       const defaultLastName = process.env.DEFAULT_USER_LAST_NAME || 'User';
 
-      // Generate salt and hash password
       const salt = await passwordService.generateSalt();
       const hashedPassword = await passwordService.hash(defaultPassword, salt);
 
-      // Create default user
       const defaultUser = em.create(User, {
         firstName: defaultFirstName,
         lastName: defaultLastName,

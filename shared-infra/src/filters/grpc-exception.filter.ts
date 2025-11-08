@@ -24,7 +24,6 @@ export class GrpcExceptionFilter implements RpcExceptionFilter {
       message = exception.message || 'An error occurred';
       code = exception.constructor.name || 'Error';
       
-      // Try to extract more details from the error
       if ((exception as any).code) {
         code = (exception as any).code;
       }
@@ -46,14 +45,12 @@ export class GrpcExceptionFilter implements RpcExceptionFilter {
       }
     }
 
-    // Create JSON string with error details
     const errorJson = JSON.stringify({
       code,
       message,
       details,
     });
     
-    // Pass the JSON string directly to RpcException
     return throwError(() => new RpcException(errorJson));
   }
 }

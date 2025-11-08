@@ -25,7 +25,6 @@ export class UserClientService implements IUserClientService, OnModuleInit {
   }
 
   async findAll(query: PaginationQueryDto): Promise<UserPaginationResult> {
-    // Exceptions will be handled by the HTTP exception filter
     return firstValueFrom(
       this.userService.FindAll({
         page: query.page,
@@ -35,12 +34,10 @@ export class UserClientService implements IUserClientService, OnModuleInit {
   }
 
   async findById(id: string): Promise<UserResponseDto> {
-    // Exceptions will be handled by the HTTP exception filter
     return firstValueFrom(this.userService.FindById({ id }));
   }
 
   async create(createUserDto: CreateUserRequestDto): Promise<UserResponseDto> {
-    // Exceptions will be handled by the HTTP exception filter
     return firstValueFrom(this.userService.Create(createUserDto));
   }
 }

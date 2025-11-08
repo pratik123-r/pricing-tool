@@ -17,7 +17,6 @@ export class ResponseInterceptor implements NestInterceptor {
     
     return next.handle().pipe(
       map((data) => {
-        // If data is already formatted (has success property), return as is
         if (data && typeof data === 'object' && 'success' in data) {
           return data;
         }
@@ -30,7 +29,6 @@ export class ResponseInterceptor implements NestInterceptor {
           return ResponseUtil.success(data || {}, 'Login successful');
         }
 
-        // If data has pagination structure (data, total, page, limit)
         if (data && typeof data === 'object' && 'data' in data && 'total' in data && 'page' in data && 'limit' in data) {
           return ResponseUtil.paginated(
             data.data,
@@ -41,7 +39,6 @@ export class ResponseInterceptor implements NestInterceptor {
           );
         }
 
-        // For single item responses
         const message = this.getSuccessMessage(method, 'item');
         return ResponseUtil.success(data, message);
       }),

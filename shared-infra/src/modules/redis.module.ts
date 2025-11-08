@@ -13,12 +13,10 @@ export class RedisModule {
         {
           provide: 'REDIS_CLIENT',
           useFactory: (configService: ConfigService) => {
-            // Create singleton Redis connection
             const config = getRedisConfig(configService, options);
             return new Redis(config);
           },
           inject: [ConfigService],
-          // Explicitly set as singleton (default in NestJS, but explicit for clarity)
         },
       ],
       exports: ['REDIS_CLIENT'],

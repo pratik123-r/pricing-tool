@@ -39,7 +39,6 @@ export class UserService implements IUserService {
       throw new ConflictAppException(`User with email ${userData.email} already exists`);
     }
 
-    // Generate salt and hash password
     const salt = await this.passwordService.generateSalt();
     const hashedPassword = await this.passwordService.hash(userData.password, salt);
     

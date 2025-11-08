@@ -23,7 +23,6 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GrpcExceptionFilter());
 
-  // Seed default user if no users exist
   try {
     const orm = app.get(MikroORM<PostgreSqlDriver>);
     await seedDefaultUserIfNeeded(orm);

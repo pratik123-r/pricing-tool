@@ -11,7 +11,6 @@ export class AuthService implements IAuthService {
   ) {}
 
   async login(loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
-    // Let exceptions propagate - they will be handled by the HTTP exception filter
     console.log('Login request received:====', loginRequest);
     return this.authClientService.login(loginRequest);
   }

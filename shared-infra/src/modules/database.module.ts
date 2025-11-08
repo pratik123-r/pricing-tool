@@ -17,8 +17,6 @@ export class DatabaseModule {
           driver: PostgreSqlDriver,
         }),
       ],
-      // MikroOrmModule is already global, so modules can use MikroOrmModule.forFeature() directly
-      // No need to export it
     };
   }
 }
