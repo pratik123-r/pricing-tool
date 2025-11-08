@@ -5,7 +5,6 @@ import { getGrpcClientConfig } from '@shared/infra';
 import { AuthController } from './controllers/auth.controller';
 import { AuthClientService } from './services/auth-client.service';
 import { RedisService } from './services/redis.service';
-import { AuthGuard } from './controllers/auth.guard';
 import { AUTH_SERVICE } from './constants';
 
 @Module({
@@ -39,9 +38,8 @@ import { AUTH_SERVICE } from './constants';
     },
     AuthClientService,
     RedisService,
-    AuthGuard,
   ],
-  exports: ['IAuthClientService', RedisService, 'IRedisService', AuthGuard],
+  exports: ['IAuthClientService', RedisService, 'IRedisService'],
 })
 export class AuthModule {}
 

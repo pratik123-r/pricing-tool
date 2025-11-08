@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from '@shared/infra';
 import { AuthModule } from './features/auth/auth.module';
 import { UserModule } from './features/user/user.module';
+import { AuthGuard } from './common';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { UserModule } from './features/user/user.module';
     AuthModule,
     UserModule,
   ],
+  providers:[AuthGuard]
 })
 export class AppModule {}
 

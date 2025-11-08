@@ -1,2 +1,2 @@
-export * from './user-context.interface';
+// UserContext interface moved to common/types
 

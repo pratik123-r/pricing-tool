@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
 import { IRedisService } from './redis.service.contract';
-import { UserContext } from '../interfaces/user-context.interface';
+import { UserContext } from '../../../common/types';
 
 @Injectable()
 export class RedisService implements IRedisService {

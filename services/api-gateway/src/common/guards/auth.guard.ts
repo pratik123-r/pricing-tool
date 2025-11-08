@@ -5,7 +5,8 @@ import {
   UnauthorizedException,
   Inject,
 } from '@nestjs/common';
-import { IRedisService } from '../services/redis.service.contract';
+import { IRedisService } from '../../features/auth/services/redis.service.contract';
+import { UserContext } from '../types/user-context.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

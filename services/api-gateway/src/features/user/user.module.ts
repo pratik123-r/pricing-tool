@@ -9,6 +9,7 @@ import { USER_SERVICE } from './constants';
 
 @Module({
   imports: [
+    AuthModule,
     ClientsModule.registerAsync([
       {
         name: USER_SERVICE,
@@ -24,8 +25,7 @@ import { USER_SERVICE } from './constants';
         },
         inject: [ConfigService],
       },
-    ]),
-    AuthModule,
+    ])
   ],
   controllers: [UserController],
   providers: [

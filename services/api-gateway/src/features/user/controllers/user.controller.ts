@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, HttpCode, HttpStatus, Inject } from '@nestjs/common';
-import { AuthGuard } from '../../auth/controllers/auth.guard';
-import { User } from '../../auth/controllers/user.decorator';
-import { UserContext } from '../../auth/interfaces/user-context.interface';
+import { AuthGuard, User } from '../../../common/guards';
+import { UserContext } from '../../../common/types';
 import { IUserClientService } from '../services/user-client.service.contract';
 import { CreateUserRequestDto, UserResponseDto, PaginationQueryDto } from '../../../../../user-service/src/features/user/dto';
 import { UserPaginationResult } from '../types';
