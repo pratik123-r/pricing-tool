@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { IUserRepository } from '../repositories/user.repository.contract';
 import { IPasswordService } from './password.service.contract';
 import { ITokenService } from './token.service.contract';
-import { IRedisService } from './redis.service.contract';
+import { IAuthRedisService } from './auth-redis.service';
 import { IAuthService } from './auth.service.contract';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { UserContext } from '../interfaces/user-context.interface';
@@ -18,8 +18,8 @@ export class AuthService implements IAuthService {
     private readonly passwordService: IPasswordService,
     @Inject('ITokenService')
     private readonly tokenService: ITokenService,
-    @Inject('IRedisService')
-    private readonly redisService: IRedisService,
+    @Inject('IAuthRedisService')
+    private readonly authRedisService: IAuthRedisService,
   ) {}
 
   async validateCredentials(email: string, password: string): Promise<User> {
@@ -51,7 +51,7 @@ export class AuthService implements IAuthService {
       token,
     };
 
-    await this.redisService.setUserContext(token, userContext);
+    await this.authRedisService.setUserContext(token, userContext);
 
     return {
       token,

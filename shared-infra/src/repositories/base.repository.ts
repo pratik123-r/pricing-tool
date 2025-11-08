@@ -53,5 +53,17 @@ export abstract class BaseRepository<T extends BaseEntity> implements IBaseRepos
     await this.em.persistAndFlush(entity);
     return entity;
   }
+
+  protected getRepository(): EntityRepository<T> {
+    return this.repository;
+  }
+
+  protected getEntityManager(): EntityManager {
+    return this.em;
+  }
+
+  protected getEntityClass(): new () => T {
+    return this.entityClass;
+  }
 }
 

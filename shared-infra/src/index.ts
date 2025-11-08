@@ -16,3 +16,6 @@ export * from './config';
 // Modules
 export * from './modules';
 
+// Services
+export * from './services';
+

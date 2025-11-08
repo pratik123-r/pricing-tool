@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
 import { AuthController } from './controllers/auth.controller';
 import { AuthClientService } from './services/auth-client.service';
-import { RedisService } from './services/redis.service';
+import { AuthRedisService } from './services/auth-redis.service';
 import { AUTH_SERVICE } from './constants';
 
 @Module({
@@ -33,13 +33,13 @@ import { AUTH_SERVICE } from './constants';
       useClass: AuthClientService,
     },
     {
-      provide: 'IRedisService',
-      useClass: RedisService,
+      provide: 'IAuthRedisService',
+      useClass: AuthRedisService,
     },
     AuthClientService,
-    RedisService,
+    AuthRedisService,
   ],
-  exports: ['IAuthClientService', RedisService, 'IRedisService'],
+  exports: ['IAuthClientService', 'IAuthRedisService'],
 })
 export class AuthModule {}
 

@@ -5,7 +5,7 @@ import { AuthService } from './services/auth.service';
 import { UserRepository } from './repositories/user.repository';
 import { PasswordService } from './services/password.service';
 import { TokenService } from './services/token.service';
-import { RedisService } from './services/redis.service';
+import { AuthRedisService } from './services/auth-redis.service';
 import { User } from './entities/user.entity';
 
 @Module({
@@ -25,8 +25,8 @@ import { User } from './entities/user.entity';
       useClass: TokenService,
     },
     {
-      provide: 'IRedisService',
-      useClass: RedisService,
+      provide: 'IAuthRedisService',
+      useClass: AuthRedisService,
     },
     {
       provide: 'IAuthService',
@@ -36,7 +36,7 @@ import { User } from './entities/user.entity';
     UserRepository,
     PasswordService,
     TokenService,
-    RedisService,
+    AuthRedisService,
   ],
   exports: [AuthService, 'IAuthService'],
 })
