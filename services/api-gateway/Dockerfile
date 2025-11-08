@@ -20,6 +20,10 @@ RUN npm ci
 COPY shared-infra ./shared-infra
 COPY services/api-gateway ./services/api-gateway
 
+# Copy service source files needed for DTO imports (relative paths)
+COPY services/auth-service/src ./services/auth-service/src
+COPY services/user-service/src ./services/user-service/src
+
 # Copy proto files from other services (needed for gRPC client connections)
 COPY services/auth-service/proto ./services/auth-service/proto
 COPY services/user-service/proto ./services/user-service/proto
@@ -49,6 +53,10 @@ RUN npm ci --only=production
 # Copy built applications
 COPY --from=builder /app/shared-infra/dist ./shared-infra/dist
 COPY --from=builder /app/services/api-gateway/dist ./services/api-gateway/dist
+
+# Copy service source files needed for runtime DTO imports (relative paths in compiled code)
+COPY --from=builder /app/services/auth-service/src ./services/auth-service/src
+COPY --from=builder /app/services/user-service/src ./services/user-service/src
 
 # Copy proto files from other services (needed for gRPC client connections)
 COPY --from=builder /app/services/auth-service/proto ./services/auth-service/proto
