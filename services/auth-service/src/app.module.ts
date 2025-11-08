@@ -28,4 +28,3 @@ import { User } from './features/auth/entities/user.entity';
   ],
 })
 export class AppModule {}
-
