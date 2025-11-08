@@ -1,6 +1,6 @@
-import { LoginRequestDto, LoginResponseDto } from '../dto';
+import { LoginRequestDto, LoginResponseDto } from '../../../../../auth-service/src/features/auth/dto';
 
 export interface IAuthClientService {
-  login(loginRequest: LoginRequestDto): Promise<LoginResponseDto | null>;
+  login(loginRequest: LoginRequestDto): Promise<LoginResponseDto>;
 }
 

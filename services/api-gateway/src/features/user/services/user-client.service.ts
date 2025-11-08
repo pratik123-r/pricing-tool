@@ -2,7 +2,7 @@ import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom, Observable } from 'rxjs';
 import { IUserClientService } from './user-client.service.contract';
-import { CreateUserRequestDto, UserResponseDto, PaginationQueryDto } from '../dto';
+import { CreateUserRequestDto, UserResponseDto, PaginationQueryDto } from '../../../../../user-service/src/features/user/dto';
 import { UserPaginationResult } from '../types';
 import { USER_SERVICE } from '../constants';
 
@@ -29,7 +29,7 @@ export class UserClientService implements IUserClientService, OnModuleInit {
       this.userService.FindAll({
         page: query.page,
         limit: query.limit,
-      }),
+      })
     );
   }
 

@@ -19,8 +19,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@shared/infra": ["../../shared-infra/src"]
-    }
+      "@shared/infra": ["../../shared-infra/src"],
+      "@services/auth-service/*": ["../auth-service/src/*"],
+      "@services/user-service/*": ["../user-service/src/*"]
+    },
+    "composite": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test"]

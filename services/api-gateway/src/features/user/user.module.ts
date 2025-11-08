@@ -3,7 +3,6 @@ import { ClientsModule } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
 import { UserController } from './controllers/user.controller';
-import { UserService } from './services/user.service';
 import { UserClientService } from './services/user-client.service';
 import { AuthModule } from '../auth/auth.module';
 import { USER_SERVICE } from './constants';
@@ -34,14 +33,9 @@ import { USER_SERVICE } from './constants';
       provide: 'IUserClientService',
       useClass: UserClientService,
     },
-    {
-      provide: 'IUserService',
-      useClass: UserService,
-    },
-    UserService,
     UserClientService,
   ],
-  exports: [UserService, 'IUserService'],
+  exports: ['IUserClientService'],
 })
 export class UserModule {}
 

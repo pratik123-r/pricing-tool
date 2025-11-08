@@ -1,16 +1,20 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Logger } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
-import { LoginRequestDto } from '../dto';
-import { LoginResponseDto } from '../dto/login-response.dto';
+import { Controller, Post, Body, HttpCode, HttpStatus, Logger, Inject } from '@nestjs/common';
+import { IAuthClientService } from '../services/auth-client.service.contract';
+import { LoginRequestDto, LoginResponseDto } from '../../../../../auth-service/src/features/auth/dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
   private readonly logger = new Logger(AuthController.name);
+  
+  constructor(
+    @Inject('IAuthClientService')
+    private readonly authClientService: IAuthClientService,
+  ) {}
+  
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@Body() loginRequest: LoginRequestDto): Promise<LoginResponseDto> {    
-    return this.authService.login(loginRequest);
+    return this.authClientService.login(loginRequest);
   }
 }
 

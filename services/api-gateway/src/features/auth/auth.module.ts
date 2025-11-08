@@ -3,7 +3,6 @@ import { ClientsModule } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
 import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
 import { AuthClientService } from './services/auth-client.service';
 import { RedisService } from './services/redis.service';
 import { AuthGuard } from './controllers/auth.guard';
@@ -38,16 +37,11 @@ import { AUTH_SERVICE } from './constants';
       provide: 'IRedisService',
       useClass: RedisService,
     },
-    {
-      provide: 'IAuthService',
-      useClass: AuthService,
-    },
-    AuthService,
     AuthClientService,
     RedisService,
     AuthGuard,
   ],
-  exports: [AuthService, 'IAuthService', RedisService, 'IRedisService', AuthGuard],
+  exports: ['IAuthClientService', RedisService, 'IRedisService', AuthGuard],
 })
 export class AuthModule {}
 
