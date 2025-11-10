@@ -105,57 +105,123 @@ This is a microservices architecture with three main services:
 
 ```
 pricing-tool/
+├── scripts/                  # Utility scripts
+│   └── kill-ports.sh        # Script to kill processes on ports
+│
 ├── services/
 │   ├── api-gateway/          # HTTP REST API Gateway
+│   │   ├── Dockerfile        # Single-stage Docker build
 │   │   ├── src/
+│   │   │   ├── app.module.ts
+│   │   │   ├── main.ts
 │   │   │   ├── features/
 │   │   │   │   ├── auth/     # Authentication feature
+│   │   │   │   │   ├── auth.module.ts
 │   │   │   │   │   ├── controllers/
 │   │   │   │   │   ├── services/
+│   │   │   │   │   ├── constants/
 │   │   │   │   │   ├── dto/
-│   │   │   │   │   └── interfaces/
+│   │   │   │   │   ├── interfaces/
+│   │   │   │   │   └── types/
 │   │   │   │   └── user/     # User feature
+│   │   │   │       ├── user.module.ts
 │   │   │   │       ├── controllers/
 │   │   │   │       ├── services/
-│   │   │   │       └── dto/
+│   │   │   │       ├── constants/
+│   │   │   │       ├── dto/
+│   │   │   │       └── types/
 │   │   │   └── common/       # Shared utilities
-│   │   └── proto/             # gRPC proto files (references)
+│   │   │       ├── errors/   # HTTP exception classes
+│   │   │       ├── filters/  # HTTP exception filters
+│   │   │       ├── guards/   # Authentication guards
+│   │   │       ├── interceptors/ # Response interceptors
+│   │   │       ├── response/ # API response interfaces
+│   │   │       ├── types/    # TypeScript types
+│   │   │       └── utils/     # Utility functions
+│   │   └── proto/            # gRPC proto files (references)
 │   │
 │   ├── auth-service/         # Authentication microservice
-│   │   ├── src/
-│   │   │   ├── features/
-│   │   │   │   └── auth/
-│   │   │   │       ├── controllers/
-│   │   │   │       ├── services/
-│   │   │   │       ├── repositories/
-│   │   │   │       ├── entities/
-│   │   │   │       └── dto/
-│   │   │   └── scripts/
-│   │   └── proto/
-│   │       └── auth.proto
+│   │   ├── Dockerfile        # Single-stage Docker build
+│   │   ├── proto/
+│   │   │   └── auth.proto    # gRPC service definition
+│   │   └── src/
+│   │       ├── app.module.ts
+│   │       ├── main.ts
+│   │       ├── common/
+│   │       │   └── index.ts
+│   │       ├── features/
+│   │       │   └── auth/
+│   │       │       ├── auth.module.ts
+│   │       │       ├── controllers/    # gRPC controllers
+│   │       │       ├── services/       # Business logic
+│   │       │       │   ├── *.service.ts
+│   │       │       │   └── *.service.contract.ts  # Interfaces
+│   │       │       ├── repositories/   # Data access
+│   │       │       │   ├── *.repository.ts
+│   │       │       │   └── *.repository.contract.ts
+│   │       │       ├── entities/       # Database entities
+│   │       │       ├── dto/            # Data Transfer Objects
+│   │       │       ├── interfaces/     # TypeScript interfaces
+│   │       │       ├── constants/      # Feature constants
+│   │       │       └── types/           # Type definitions
+│   │       ├── migrations/             # Database migrations (empty)
+│   │       └── scripts/                 # Utility scripts
+│   │           └── mikro-orm.config.ts
 │   │
 │   └── user-service/         # User management microservice
-│       ├── src/
-│       │   ├── features/
-│       │   │   └── user/
-│       │   │       ├── controllers/
-│       │   │       ├── services/
-│       │   │       ├── repositories/
-│       │   │       ├── entities/
-│       │   │       └── dto/
-│       │   ├── migrations/   # Database migrations
-│       │   └── scripts/
-│       └── proto/
-│           └── user.proto
+│       ├── Dockerfile        # Single-stage Docker build
+│       ├── docker-entrypoint.sh  # Entrypoint script for migrations
+│       ├── proto/
+│       │   └── user.proto    # gRPC service definition
+│       └── src/
+│           ├── app.module.ts
+│           ├── main.ts
+│           ├── common/
+│           │   ├── response/ # API response interfaces
+│           │   ├── types/   # TypeScript types
+│           │   └── utils/    # Utility functions
+│           ├── features/
+│           │   └── user/
+│           │       ├── user.module.ts
+│           │       ├── controllers/    # gRPC controllers
+│           │       ├── services/      # Business logic
+│           │       │   ├── *.service.ts
+│           │       │   ├── *.service.contract.ts
+│           │       │   └── user.mapper.ts  # Entity to DTO mapper
+│           │       ├── repositories/   # Data access
+│           │       │   ├── *.repository.ts
+│           │       │   └── *.repository.contract.ts
+│           │       ├── entities/       # Database entities
+│           │       ├── dto/            # Data Transfer Objects
+│           │       └── types/          # Type definitions
+│           ├── migrations/             # Database migrations
+│           │   └── Migration*.ts
+│           └── scripts/                # Utility scripts
+│               ├── mikro-orm.config.ts
+│               ├── on-startup-seed.ts
+│               └── seed-default-user.ts
 │
 └── shared-infra/             # Shared infrastructure code
     └── src/
-        ├── entities/         # Base entities
+        ├── entities/         # Base entities (BaseEntity)
         ├── repositories/     # Base repositories
+        │   ├── base.repository.ts
+        │   └── base.repository.interface.ts
+        ├── services/         # Shared services
+        │   ├── redis.service.ts
+        │   └── redis.service.interface.ts
+        ├── modules/          # Shared modules
+        │   ├── database.module.ts  # Global database module
+        │   └── redis.module.ts    # Global Redis module
         ├── errors/           # Exception classes
+        │   ├── base-app.exception.ts
+        │   └── app-exceptions.ts
         ├── filters/          # Exception filters
-        ├── modules/          # Shared modules (Database, Redis)
+        │   └── grpc-exception.filter.ts
         └── config/           # Configuration utilities
+            ├── database.config.ts
+            ├── redis.config.ts
+            └── grpc.config.ts
 ```
 
 ### Feature-Based Structure
@@ -165,11 +231,13 @@ Each service follows a feature-based folder structure:
 ```
 features/
 └── {feature-name}/
-    ├── controllers/          # HTTP/gRPC controllers
-    ├── services/             # Business logic
-    │   ├── {service}.ts
-    │   └── {service}.contract.ts  # Interface
-    ├── repositories/         # Data access layer
+    ├── {feature}.module.ts  # NestJS module
+    ├── controllers/         # HTTP/gRPC controllers
+    ├── services/            # Business logic
+    │   ├── {service}.ts      # Implementation
+    │   ├── {service}.contract.ts  # Interface (contract)
+    │   └── {service}.mapper.ts    # Entity to DTO mapper (optional)
+    ├── repositories/        # Data access layer
     │   ├── {repository}.ts
     │   └── {repository}.contract.ts
     ├── entities/            # Database entities
@@ -177,8 +245,16 @@ features/
     ├── interfaces/          # TypeScript interfaces
     ├── types/               # Type definitions
     ├── constants/           # Feature constants
-    └── {feature}.module.ts # NestJS module
+    └── index.ts             # Public exports
 ```
+
+### Naming Conventions
+
+- **Interfaces**: Use `.contract.ts` for service/repository interfaces (e.g., `user.service.contract.ts`)
+- **Interfaces**: Use `.interface.ts` for data structures (e.g., `user-context.interface.ts`)
+- **Mappers**: Use `.mapper.ts` for entity-to-DTO transformation (e.g., `user.mapper.ts`)
+- **DTOs**: Use `.dto.ts` suffix (e.g., `user-response.dto.ts`)
+- **Entities**: Use `.entity.ts` suffix (e.g., `user.entity.ts`)
 
 ---
 
@@ -601,6 +677,13 @@ docker-compose build auth-service
 docker-compose build user-service
 ```
 
+**Note**: Dockerfiles use single-stage builds that:
+- Install all dependencies (including dev dependencies for build tools)
+- Build the TypeScript code to JavaScript
+- Run the compiled application
+
+This results in larger images (~500MB) but simpler build process.
+
 #### Step 4: Start Services
 
 ```bash
@@ -663,9 +746,10 @@ RUN_MIGRATIONS=true
 
 ⚠️ **Database & Redis**: These should be running on your **host machine**, not in Docker. Use `host.docker.internal` to access them from containers.
 
-⚠️ **Build Process**: Dockerfiles use multi-stage builds:
-- **Builder stage**: Installs all dependencies and builds the application
-- **Production stage**: Includes all dependencies (needed for migrations if enabled)
+⚠️ **Build Process**: Dockerfiles use single-stage builds:
+- Installs all dependencies (including dev dependencies)
+- Builds the application
+- Runs the application
 
 ### Environment-Specific Configuration
 
@@ -731,8 +815,38 @@ NODE_ENV=production npm run start:prod
 
 - **Feature-based organization** - Group related code by feature
 - **Separation of concerns** - Controllers, services, repositories in separate folders
-- **Interface contracts** - Use `.contract.ts` files for interfaces
+- **Interface contracts** - Use `.contract.ts` files for service/repository interfaces
+- **Data interfaces** - Use `.interface.ts` files for data structures
+- **Mappers in service layer** - Entity-to-DTO transformation in service layer
 - **DRY principle** - Use shared infrastructure code from `@shared/infra`
+- **Abstract base classes** - Use abstract classes for base repositories (Template Method pattern)
+- **Dependency Injection** - Use string tokens for DI (e.g., `'IUserRepository'`)
+
+### Key Architectural Decisions
+
+1. **Abstract Base Repository** - Uses abstract class with Template Method pattern
+   - Forces subclasses to provide required dependencies
+   - Provides common CRUD operations
+   - Prevents direct instantiation
+
+2. **Mapper in Service Layer** - Entity-to-DTO transformation happens in services
+   - Repositories return entities only
+   - Services handle business logic and transformation
+   - Keeps separation of concerns
+
+3. **Global Modules** - Database and Redis modules are global
+   - Available throughout the application
+   - Imported once in `AppModule`
+   - No need to import in feature modules
+
+4. **Single-Stage Docker Builds** - Simplified Dockerfiles
+   - Easier to understand and maintain
+   - Includes all dependencies (dev + production)
+   - Larger images (~500MB) but simpler build process
+
+5. **Interface Naming** - Two types of interfaces
+   - `.contract.ts` - Service/repository contracts
+   - `.interface.ts` - Data structures and types
 
 ### Adding New Features
 
@@ -740,6 +854,7 @@ NODE_ENV=production npm run start:prod
 2. Add controllers, services, repositories, DTOs
 3. Create feature module: `{feature}.module.ts`
 4. Import module in `app.module.ts`
+5. Create mapper in service layer if needed (e.g., `user.mapper.ts`)
 
 ### Database Changes
 
