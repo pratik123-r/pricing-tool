@@ -1,5 +1,4 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -27,27 +26,6 @@ RUN npm run build
 # Build auth-service
 WORKDIR /app/services/auth-service
 RUN npm run build
-
-# Production stage
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy package files
-COPY package.json ./
-COPY package-lock.json* ./
-COPY shared-infra/package.json ./shared-infra/
-COPY services/auth-service/package.json ./services/auth-service/
-
-# Install only production dependencies from root (workspace-aware)
-RUN npm ci --only=production
-
-# Copy built applications
-COPY --from=builder /app/shared-infra/dist ./shared-infra/dist
-COPY --from=builder /app/services/auth-service/dist ./services/auth-service/dist
-
-# Copy proto files
-COPY --from=builder /app/services/auth-service/proto ./services/auth-service/proto
 
 WORKDIR /app/services/auth-service
 

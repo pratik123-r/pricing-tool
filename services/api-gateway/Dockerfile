@@ -1,5 +1,4 @@
-# Build stage
-FROM node:18-alpine AS builder
+FROM node:18-alpine
 
 WORKDIR /app
 
@@ -35,32 +34,6 @@ RUN npm run build
 # Build api-gateway
 WORKDIR /app/services/api-gateway
 RUN npm run build
-
-# Production stage
-FROM node:18-alpine
-
-WORKDIR /app
-
-# Copy package files
-COPY package.json ./
-COPY package-lock.json* ./
-COPY shared-infra/package.json ./shared-infra/
-COPY services/api-gateway/package.json ./services/api-gateway/
-
-# Install only production dependencies from root (workspace-aware)
-RUN npm ci --only=production
-
-# Copy built applications
-COPY --from=builder /app/shared-infra/dist ./shared-infra/dist
-COPY --from=builder /app/services/api-gateway/dist ./services/api-gateway/dist
-
-# Copy service source files needed for runtime DTO imports (relative paths in compiled code)
-COPY --from=builder /app/services/auth-service/src ./services/auth-service/src
-COPY --from=builder /app/services/user-service/src ./services/user-service/src
-
-# Copy proto files from other services (needed for gRPC client connections)
-COPY --from=builder /app/services/auth-service/proto ./services/auth-service/proto
-COPY --from=builder /app/services/user-service/proto ./services/user-service/proto
 
 WORKDIR /app/services/api-gateway
 
