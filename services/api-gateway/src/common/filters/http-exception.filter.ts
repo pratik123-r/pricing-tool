@@ -25,21 +25,18 @@ export class HttpExceptionFilter implements ExceptionFilter {
     let code = 'INTERNAL_SERVER_ERROR';
     let details: any = undefined;
 
-    // Handle protocol-agnostic app exceptions (from microservices)
     if (exception instanceof BaseAppException) {
       status = exception.statusCode as HttpStatus;
       message = exception.message;
       code = exception.code;
       details = exception.details;
     }
-    // Handle HTTP exceptions (from API Gateway)
     else if (exception instanceof BaseException) {
       status = exception.getStatus();
       message = exception.message;
       code = exception.code;
       details = exception.details;
     }
-    // Handle NestJS HttpException
     else if (exception instanceof HttpException) {
       status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
@@ -53,7 +50,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         details = responseObj.details;
       }
     }
-    // Handle gRPC RpcException (from microservices)
     else if (exception instanceof RpcException) {
       const errorData = exception.getError() as any;
       
@@ -97,7 +93,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         code = 'INTERNAL_SERVER_ERROR';
       }
     }
-    // Handle gRPC client errors (from gRPC client calls)
     else if (exception instanceof Error && (exception as any).code !== undefined) {
       const grpcError = exception as any;
       this.logger.error(`gRPC client error: ${grpcError.code} - ${grpcError.message}`);
@@ -148,7 +143,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         code = this.mapGrpcCodeToErrorCode(grpcError.code);
       }
     }
-    // Handle generic errors
     else if (exception instanceof Error) {
       message = exception.message || 'An error occurred';
       code = exception.constructor.name || 'Error';
@@ -173,7 +167,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
     }
 
-    // Log stack trace (not in response)
     if (exception instanceof Error && exception.stack) {
       this.logger.error(exception.stack);
     }

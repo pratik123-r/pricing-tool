@@ -1,17 +1,17 @@
 import { Logger } from '@nestjs/common';
 import { MikroORM } from '@mikro-orm/core';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
-import { User } from '../features/user/entities/user.entity';
-import { PasswordService } from '../features/user/services/password.service';
+import { UserEntity } from '../features/user/infrastructure/persistence/entities/user.entity';
+import { PasswordHashingService } from '../features/user/infrastructure/services/password-hashing.service';
 
 const logger = new Logger('UserSeed');
 
 export async function seedDefaultUserIfNeeded(orm: MikroORM<PostgreSqlDriver>): Promise<void> {
   const em = orm.em.fork();
-  const passwordService = new PasswordService();
+  const passwordHashingService = new PasswordHashingService();
 
   try {
-    const userCount = await em.count(User);
+    const userCount = await em.count(UserEntity);
     
     if (userCount === 0) {
       logger.log('No users found. Creating default user...');
@@ -21,10 +21,10 @@ export async function seedDefaultUserIfNeeded(orm: MikroORM<PostgreSqlDriver>): 
       const defaultFirstName = process.env.DEFAULT_USER_FIRST_NAME || 'Admin';
       const defaultLastName = process.env.DEFAULT_USER_LAST_NAME || 'User';
 
-      const salt = await passwordService.generateSalt();
-      const hashedPassword = await passwordService.hash(defaultPassword, salt);
+      const salt = await passwordHashingService.generateSalt();
+      const hashedPassword = await passwordHashingService.hash(defaultPassword, salt);
 
-      const defaultUser = em.create(User, {
+      const defaultUser = em.create(UserEntity, {
         firstName: defaultFirstName,
         lastName: defaultLastName,
         email: defaultEmail,
@@ -38,7 +38,6 @@ export async function seedDefaultUserIfNeeded(orm: MikroORM<PostgreSqlDriver>): 
     }
   } catch (error) {
     logger.error('Error seeding default user', error);
-    // Don't throw - allow app to start even if seeding fails
   }
 }
 

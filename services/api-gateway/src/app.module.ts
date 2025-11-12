@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { RedisModule } from '@shared/infra';
+import { CacheModule } from '@shared/infra';
 import { AuthModule } from './features/auth/auth.module';
 import { UserModule } from './features/user/user.module';
-import { AuthGuard } from './common';
 
 @Module({
   imports: [
@@ -11,11 +10,10 @@ import { AuthGuard } from './common';
       isGlobal: true,
       envFilePath: '../../.env', // Use root .env file
     }),
-    RedisModule.forRoot(),
+    CacheModule.forRoot(), // Generic cache abstraction - currently using Redis
     AuthModule,
     UserModule,
   ],
-  providers:[AuthGuard]
 })
 export class AppModule {}
 

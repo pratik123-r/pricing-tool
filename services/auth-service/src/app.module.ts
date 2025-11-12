@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DatabaseModule, RedisModule } from '@shared/infra';
+import { DatabaseModule, CacheModule } from '@shared/infra';
 import { AuthModule } from './features/auth/auth.module';
-import { User } from './features/auth/entities/user.entity';
+import { UserEntity } from './features/auth/infrastructure/persistence/entities/user.entity';
 
 @Module({
   imports: [
@@ -21,9 +21,9 @@ import { User } from './features/auth/entities/user.entity';
       defaultUser: 'postgres',
       defaultPassword: 'pratik',
       defaultDbName: 'user_db',
-      entities: [User],
+      entities: [UserEntity],
     }),
-    RedisModule.forRoot(),
+    CacheModule.forRoot(), // Generic cache abstraction - currently using Redis
     AuthModule,
   ],
 })

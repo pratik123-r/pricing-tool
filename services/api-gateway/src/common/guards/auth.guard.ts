@@ -5,14 +5,13 @@ import {
   UnauthorizedException,
   Inject,
 } from '@nestjs/common';
-import { UserContext } from '../types/user-context.interface';
-import { IAuthRedisService } from '../../features/auth/services/auth-redis.service';
+import { GetUserContextUseCase } from '../../features/auth/application/use-cases/get-user-context.use-case';
+import { UserContext } from '../../features/auth/domain/value-objects/user-context.vo';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    @Inject('IAuthRedisService')
-    private readonly authRedisService: IAuthRedisService,
+    private readonly getUserContextUseCase: GetUserContextUseCase,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -23,7 +22,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Token not provided');
     }
 
-    const userContext = await this.authRedisService.getUserContext(token);
+    const userContext = await this.getUserContextUseCase.execute(token);
     if (!userContext) {
       throw new UnauthorizedException('Invalid or expired token');
     }

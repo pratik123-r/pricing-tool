@@ -1,44 +1,39 @@
 import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
-import { AuthController } from './controllers/auth.controller';
-import { AuthService } from './services/auth.service';
-import { UserRepository } from './repositories/user.repository';
-import { PasswordService } from './services/password.service';
-import { TokenService } from './services/token.service';
-import { AuthRedisService } from './services/auth-redis.service';
-import { User } from './entities/user.entity';
+import { AuthController } from './presentation/controllers/auth.controller';
+import { LoginUseCase } from './application/use-cases/login.use-case';
+import { UserRepository } from './infrastructure/persistence/repositories/user.repository';
+import { UserEntity } from './infrastructure/persistence/entities/user.entity';
+import { PasswordHashingService } from './infrastructure/services/password-hashing.service';
+import { TokenGenerationService } from './infrastructure/services/token-generation.service';
+import { SessionStorageService } from './infrastructure/services/session-storage.service';
+import { IUserRepository } from './domain/repositories/user.repository.interface';
+import { IPasswordHashingService } from './domain/services/password-hashing.interface';
+import { ITokenGenerationService } from './domain/services/token-generation.interface';
+import { ISessionStorageService } from './domain/services/session-storage.interface';
 
 @Module({
-  imports: [MikroOrmModule.forFeature([User])],
+  imports: [MikroOrmModule.forFeature([UserEntity])],
   controllers: [AuthController],
   providers: [
+    LoginUseCase,
     {
       provide: 'IUserRepository',
       useClass: UserRepository,
     },
     {
-      provide: 'IPasswordService',
-      useClass: PasswordService,
+      provide: 'IPasswordHashingService',
+      useClass: PasswordHashingService,
     },
     {
-      provide: 'ITokenService',
-      useClass: TokenService,
+      provide: 'ITokenGenerationService',
+      useClass: TokenGenerationService,
     },
     {
-      provide: 'IAuthRedisService',
-      useClass: AuthRedisService,
+      provide: 'ISessionStorageService',
+      useClass: SessionStorageService,
     },
-    {
-      provide: 'IAuthService',
-      useClass: AuthService,
-    },
-    AuthService,
-    UserRepository,
-    PasswordService,
-    TokenService,
-    AuthRedisService,
   ],
-  exports: [AuthService, 'IAuthService'],
+  exports: [LoginUseCase],
 })
 export class AuthModule {}
-

@@ -2,10 +2,14 @@ import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
-import { UserController } from './controllers/user.controller';
-import { UserClientService } from './services/user-client.service';
 import { AuthModule } from '../auth/auth.module';
 import { USER_SERVICE } from './constants';
+import { UserController } from './presentation/controllers/user.controller';
+import { FindAllUsersUseCase } from './application/use-cases/find-all-users.use-case';
+import { FindUserByIdUseCase } from './application/use-cases/find-user-by-id.use-case';
+import { CreateUserUseCase } from './application/use-cases/create-user.use-case';
+import { UserClientService } from './infrastructure/clients/user-client.service';
+import { IUserClientService } from './domain/services/user-client.interface';
 
 @Module({
   imports: [
@@ -29,13 +33,14 @@ import { USER_SERVICE } from './constants';
   ],
   controllers: [UserController],
   providers: [
+    FindAllUsersUseCase,
+    FindUserByIdUseCase,
+    CreateUserUseCase,
     {
       provide: 'IUserClientService',
       useClass: UserClientService,
     },
-    UserClientService,
   ],
   exports: ['IUserClientService'],
 })
 export class UserModule {}
-

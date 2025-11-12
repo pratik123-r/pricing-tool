@@ -2,10 +2,15 @@ import { Module } from '@nestjs/common';
 import { ClientsModule } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
-import { AuthController } from './controllers/auth.controller';
-import { AuthClientService } from './services/auth-client.service';
-import { AuthRedisService } from './services/auth-redis.service';
-import { AUTH_SERVICE } from './constants';
+import { AUTH_SERVICE } from './constants/microservices.constants';
+import { AuthController } from './presentation/controllers/auth.controller';
+import { LoginUseCase } from './application/use-cases/login.use-case';
+import { GetUserContextUseCase } from './application/use-cases/get-user-context.use-case';
+import { AuthClientService } from './infrastructure/clients/auth-client.service';
+import { SessionStorageService } from './infrastructure/services/session-storage.service';
+import { AuthGuard } from '../../common/guards/auth.guard';
+import { IAuthClientService } from './domain/services/auth-client.interface';
+import { ISessionStorageService } from './domain/services/session-storage.interface';
 
 @Module({
   imports: [
@@ -28,18 +33,18 @@ import { AUTH_SERVICE } from './constants';
   ],
   controllers: [AuthController],
   providers: [
+    LoginUseCase,
+    GetUserContextUseCase,
+    AuthGuard,
     {
       provide: 'IAuthClientService',
       useClass: AuthClientService,
     },
     {
-      provide: 'IAuthRedisService',
-      useClass: AuthRedisService,
+      provide: 'ISessionStorageService',
+      useClass: SessionStorageService,
     },
-    AuthClientService,
-    AuthRedisService,
   ],
-  exports: ['IAuthClientService', 'IAuthRedisService'],
+  exports: ['IAuthClientService', 'ISessionStorageService', GetUserContextUseCase, AuthGuard],
 })
 export class AuthModule {}
-

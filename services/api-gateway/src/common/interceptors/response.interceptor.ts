@@ -21,7 +21,6 @@ export class ResponseInterceptor implements NestInterceptor {
           return data;
         }
 
-        // Special handling for login endpoint
         if (url.includes('/auth/login')) {
           if (data && typeof data === 'object' && 'token' in data) {
             return ResponseUtil.success(data, 'Login successful');

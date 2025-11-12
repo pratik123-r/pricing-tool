@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '@shared/infra';
 import { UserModule } from './features/user/user.module';
-import { User } from './features/user/entities/user.entity';
+import { UserEntity } from './features/user/infrastructure/persistence/entities/user.entity';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { User } from './features/user/entities/user.entity';
       defaultUser: 'postgres',
       defaultPassword: 'pratik',
       defaultDbName: 'user_db',
-      entities: [User],
+      entities: [UserEntity],
     }),
     UserModule,
   ],
