@@ -4,8 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { getGrpcClientConfig } from '@shared/infra';
 import { AUTH_SERVICE } from './constants/microservices.constants';
 import { AuthController } from './presentation/controllers/auth.controller';
-import { LoginUseCase } from './application/use-cases/login.use-case';
-import { GetUserContextUseCase } from './application/use-cases/get-user-context.use-case';
 import { AuthClientService } from './infrastructure/clients/auth-client.service';
 import { SessionStorageService } from './infrastructure/services/session-storage.service';
 import { AuthGuard } from '../../common/guards/auth.guard';
@@ -33,8 +31,6 @@ import { ISessionStorageService } from './domain/services/session-storage.interf
   ],
   controllers: [AuthController],
   providers: [
-    LoginUseCase,
-    GetUserContextUseCase,
     AuthGuard,
     {
       provide: 'IAuthClientService',
@@ -45,6 +41,6 @@ import { ISessionStorageService } from './domain/services/session-storage.interf
       useClass: SessionStorageService,
     },
   ],
-  exports: ['IAuthClientService', 'ISessionStorageService', GetUserContextUseCase, AuthGuard],
+  exports: ['IAuthClientService', 'ISessionStorageService', AuthGuard],
 })
 export class AuthModule {}

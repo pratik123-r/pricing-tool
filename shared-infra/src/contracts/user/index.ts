@@ -1,4 +1,3 @@
-export * from './user-response.dto';
-export * from './create-user-request.dto';
-export * from './pagination-query.dto';
+export * from './request';
+export * from './response';
 

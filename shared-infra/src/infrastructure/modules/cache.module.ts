@@ -25,12 +25,8 @@ export class CacheModule {
           provide: 'ICacheService',
           useClass: RedisCacheService,
         },
-        {
-          provide: 'IRedisService',
-          useClass: RedisCacheService,
-        },
       ],
-      exports: ['REDIS_CLIENT', 'ICacheService', 'IRedisService', RedisCacheService],
+      exports: ['REDIS_CLIENT', 'ICacheService', RedisCacheService],
     };
   }
 }

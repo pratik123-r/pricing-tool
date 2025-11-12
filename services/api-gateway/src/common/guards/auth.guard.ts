@@ -5,13 +5,14 @@ import {
   UnauthorizedException,
   Inject,
 } from '@nestjs/common';
-import { GetUserContextUseCase } from '../../features/auth/application/use-cases/get-user-context.use-case';
+import { ISessionStorageService } from '../../features/auth/domain/services/session-storage.interface';
 import { UserContext } from '../../features/auth/domain/value-objects/user-context.vo';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private readonly getUserContextUseCase: GetUserContextUseCase,
+    @Inject('ISessionStorageService')
+    private readonly sessionStorageService: ISessionStorageService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException('Token not provided');
     }
 
-    const userContext = await this.getUserContextUseCase.execute(token);
+    const userContext = await this.sessionStorageService.getUserContext(token);
     if (!userContext) {
       throw new UnauthorizedException('Invalid or expired token');
     }

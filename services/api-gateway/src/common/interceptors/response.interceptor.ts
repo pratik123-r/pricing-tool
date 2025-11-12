@@ -12,7 +12,6 @@ import { ResponseUtil } from '../utils';
 export class ResponseInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     const request = context.switchToHttp().getRequest();
-    const method = request.method;
     const url = request.url;
     
     return next.handle().pipe(
@@ -23,9 +22,9 @@ export class ResponseInterceptor implements NestInterceptor {
 
         if (url.includes('/auth/login')) {
           if (data && typeof data === 'object' && 'token' in data) {
-            return ResponseUtil.success(data, 'Login successful');
+            return ResponseUtil.success(data);
           }
-          return ResponseUtil.success(data || {}, 'Login successful');
+          return ResponseUtil.success(data || {});
         }
 
         if (data && typeof data === 'object' && 'data' in data && 'total' in data && 'page' in data && 'limit' in data) {
@@ -34,34 +33,13 @@ export class ResponseInterceptor implements NestInterceptor {
             data.page,
             data.limit,
             data.total,
-            this.getSuccessMessage(method, 'list'),
           );
         }
 
-        const message = this.getSuccessMessage(method, 'item');
-        return ResponseUtil.success(data, message);
+        return ResponseUtil.success(data);
       }),
     );
   }
 
-  private getSuccessMessage(method: string, type: string): string {
-    const messages: { [key: string]: { [key: string]: string } } = {
-      GET: {
-        list: 'Items retrieved successfully',
-        item: 'Item retrieved successfully',
-      },
-      POST: {
-        item: 'Item created successfully',
-      },
-      PUT: {
-        item: 'Item updated successfully',
-      },
-      DELETE: {
-        item: 'Item deleted successfully',
-      },
-    };
-
-    return messages[method]?.[type] || 'Request successful';
-  }
 }
 

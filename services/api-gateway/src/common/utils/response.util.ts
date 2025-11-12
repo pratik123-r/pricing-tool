@@ -2,12 +2,17 @@ import { ApiResponse, PaginatedResponse, PaginationMeta } from '../response';
 
 export class ResponseUtil {
   static success<T>(data: T, message?: string): ApiResponse<T> {
-    return {
+    const response: ApiResponse<T> = {
       success: true,
-      message,
       data,
       timestamp: new Date().toISOString(),
     };
+    
+    if (message) {
+      response.message = message;
+    }
+    
+    return response;
   }
 
   static paginated<T>(
@@ -19,9 +24,8 @@ export class ResponseUtil {
   ): PaginatedResponse<T> {
     const totalPages = Math.ceil(total / limit);
     
-    return {
+    const response: PaginatedResponse<T> = {
       success: true,
-      message,
       data,
       meta: {
         page,
@@ -33,6 +37,12 @@ export class ResponseUtil {
       },
       timestamp: new Date().toISOString(),
     };
+    
+    if (message) {
+      response.message = message;
+    }
+    
+    return response;
   }
 
   static error(code: string, message: string, details?: any): ApiResponse {
