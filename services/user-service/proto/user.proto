@@ -6,6 +6,7 @@ service UserService {
   rpc FindAll (FindAllRequest) returns (FindAllResponse);
   rpc FindById (FindByIdRequest) returns (FindByIdResponse);
   rpc Create (CreateUserRequest) returns (CreateUserResponse);
+  rpc Update (UpdateUserRequest) returns (UpdateUserResponse);
 }
 
 message FindAllRequest {
@@ -36,6 +37,18 @@ message CreateUserRequest {
 }
 
 message CreateUserResponse {
+  UserData data = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  optional string firstName = 2;
+  optional string lastName = 3;
+  optional string email = 4;
+  optional string password = 5;
+}
+
+message UpdateUserResponse {
   UserData data = 1;
 }
 

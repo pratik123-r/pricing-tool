@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { EntityRepository, EntityManager } from '@mikro-orm/core';
 import { InjectRepository } from '@mikro-orm/nestjs';
 import { BaseRepository } from '@shared/infra';
-import { IUserRepository, CreateUserData } from '../../../domain/repositories/user.repository.interface';
+import { IUserRepository, CreateUserData, UpdateUserData } from '../../../domain/repositories/user.repository.interface';
 import { User } from '../../../domain/entities/user.entity';
 import { UserEntity } from '../entities/user.entity';
 
@@ -27,6 +27,10 @@ export class UserRepository extends BaseRepository<UserEntity, User> implements 
 
   async create(userData: CreateUserData): Promise<User> {
     return super.create(userData);
+  }
+
+  async update(id: string, userData: UpdateUserData): Promise<User> {
+    return super.update(id, userData);
   }
 
   async findAll(page: number, limit: number): Promise<{ data: User[]; total: number }> {

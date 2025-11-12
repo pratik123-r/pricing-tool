@@ -1,2 +1,2 @@
-export { CreateUserRequestDto, UserResponseDto, PaginationQueryDto } from '@shared/infra';
+export { CreateUserRequestDto, UpdateUserRequestDto, UserResponseDto, PaginationQueryDto } from '@shared/infra';
 
