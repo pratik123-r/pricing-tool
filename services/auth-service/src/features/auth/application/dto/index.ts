@@ -1,2 +1,2 @@
-export { LoginRequestDto, LoginResponseDto } from '@shared/infra';
+export { LoginRequestDto, LoginResponseDto, RefreshTokenRequestDto, RefreshTokenResponseDto } from '@shared/infra';
 

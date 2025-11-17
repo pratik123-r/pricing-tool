@@ -38,6 +38,7 @@ export class LoginUseCase {
     }
 
     const token = this.tokenGenerationService.generate(user.id);
+    const refreshToken = this.tokenGenerationService.generateRefreshToken(user.id);
 
     const userContext = new UserContext(
       user.id,
@@ -47,9 +48,11 @@ export class LoginUseCase {
     );
 
     await this.sessionStorageService.setUserContext(token, userContext);
+    await this.sessionStorageService.setRefreshToken(refreshToken, user.id);
 
     return {
       token,
+      refreshToken,
       userId: user.id,
     };
   }

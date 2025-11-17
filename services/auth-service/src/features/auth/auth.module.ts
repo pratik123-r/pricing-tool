@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { AuthController } from './presentation/controllers/auth.controller';
 import { LoginUseCase } from './application/use-cases/login.use-case';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { UserRepository } from './infrastructure/persistence/repositories/user.repository';
 import { UserEntity } from './infrastructure/persistence/entities/user.entity';
 import { PasswordHashingService } from './infrastructure/services/password-hashing.service';
@@ -17,6 +18,7 @@ import { ISessionStorageService } from './domain/services/session-storage.interf
   controllers: [AuthController],
   providers: [
     LoginUseCase,
+    RefreshTokenUseCase,
     {
       provide: 'IUserRepository',
       useClass: UserRepository,
@@ -34,6 +36,6 @@ import { ISessionStorageService } from './domain/services/session-storage.interf
       useClass: SessionStorageService,
     },
   ],
-  exports: [LoginUseCase],
+  exports: [LoginUseCase, RefreshTokenUseCase],
 })
 export class AuthModule {}

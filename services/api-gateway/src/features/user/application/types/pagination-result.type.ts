@@ -1,4 +1,4 @@
-import { UserResponseDto } from '../dto';
+import { UserResponseDto } from '@shared/infra';
 
 export interface UserPaginationResult {
   data: UserResponseDto[];

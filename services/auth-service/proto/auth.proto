@@ -4,6 +4,7 @@ package auth;
 
 service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse);
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
 }
 
 message LoginRequest {
@@ -19,6 +20,23 @@ message LoginResponse {
 
 message LoginData {
   string token = 1;
-  string userId = 2;
+  string refreshToken = 2;
+  string userId = 3;
+}
+
+message RefreshTokenRequest {
+  string refreshToken = 1;
+}
+
+message RefreshTokenResponse {
+  bool success = 1;
+  string message = 2;
+  RefreshTokenData data = 3;
+}
+
+message RefreshTokenData {
+  string token = 1;
+  string refreshToken = 2;
+  string userId = 3;
 }
 

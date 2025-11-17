@@ -20,7 +20,7 @@ export class ResponseInterceptor implements NestInterceptor {
           return data;
         }
 
-        if (url.includes('/auth/login')) {
+        if (url.includes('/auth/login') || url.includes('/auth/refresh-token')) {
           if (data && typeof data === 'object' && 'token' in data) {
             return ResponseUtil.success(data);
           }
