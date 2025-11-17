@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import Redis from 'ioredis';
-import { ICacheService } from '../../domain/interfaces/cache/cache.service.interface';
+import { ICacheService } from '../../domain/services/cache.interface';
 
 @Injectable()
 export class RedisCacheService implements ICacheService {
@@ -40,3 +40,4 @@ export class RedisCacheService implements ICacheService {
     await this.redis.expire(key, seconds);
   }
 }
+

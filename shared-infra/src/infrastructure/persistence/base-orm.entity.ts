@@ -1,5 +1,5 @@
 import { PrimaryKey, Property } from '@mikro-orm/core';
-import { IEntity } from '../../domain/interfaces/persistence/entity.interface';
+import { IEntity } from '../../domain/interfaces/entity.interface';
 
 export abstract class BaseOrmEntity implements IEntity {
   @PrimaryKey({ type: 'uuid', defaultRaw: 'gen_random_uuid()' })

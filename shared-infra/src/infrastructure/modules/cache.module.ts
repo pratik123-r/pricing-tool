@@ -2,8 +2,8 @@ import { Module, DynamicModule } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import { getRedisConfig, RedisConfigOptions } from '../config/redis.config';
-import { RedisCacheService } from '../cache/redis-cache.service';
-import { ICacheService } from '../../domain/interfaces/cache/cache.service.interface';
+import { RedisCacheService } from '../services/cache.service';
+import { ICacheService } from '../../domain/services/cache.interface';
 
 @Module({})
 export class CacheModule {

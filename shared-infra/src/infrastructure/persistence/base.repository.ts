@@ -1,5 +1,5 @@
 import { EntityRepository, EntityManager } from '@mikro-orm/core';
-import { IEntity } from '../../domain/interfaces/persistence/entity.interface';
+import { IEntity } from '../../domain/interfaces/entity.interface';
 
 export abstract class BaseRepository<
   TOrmEntity extends object,

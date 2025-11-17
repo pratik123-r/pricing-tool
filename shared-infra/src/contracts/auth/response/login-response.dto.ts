@@ -1,6 +1,6 @@
 export class LoginResponseDto {
-  token: string;
-  refreshToken: string;
-  userId: string;
+  token!: string;
+  refreshToken!: string;
+  userId!: string;
 }
 
