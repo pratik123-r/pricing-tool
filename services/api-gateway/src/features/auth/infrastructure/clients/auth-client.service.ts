@@ -5,8 +5,8 @@ import { IAuthClientService } from '../../domain/services/auth-client.interface'
 import { LoginRequestDto, LoginResponseDto, RefreshTokenRequestDto, RefreshTokenResponseDto } from '../../application/dto';
 
 interface AuthService {
-  Login(data: LoginRequestDto): Observable<{ success: boolean; message: string; data: LoginResponseDto }>;
-  RefreshToken(data: RefreshTokenRequestDto): Observable<{ success: boolean; message: string; data: RefreshTokenResponseDto }>;
+  Login(data: LoginRequestDto): Observable<LoginResponseDto>;
+  RefreshToken(data: RefreshTokenRequestDto): Observable<RefreshTokenResponseDto>;
 }
 
 @Injectable()
@@ -22,17 +22,15 @@ export class AuthClientService implements IAuthClientService, OnModuleInit {
   }
 
   async login(loginRequest: LoginRequestDto): Promise<LoginResponseDto> {
-    const response = await firstValueFrom(
+    return firstValueFrom(
       this.authService.Login(loginRequest)
     );
-    return response.data;
   }
 
   async refreshToken(refreshTokenRequest: RefreshTokenRequestDto): Promise<RefreshTokenResponseDto> {
-    const response = await firstValueFrom(
+    return firstValueFrom(
       this.authService.RefreshToken(refreshTokenRequest)
     );
-    return response.data;
   }
 }
 

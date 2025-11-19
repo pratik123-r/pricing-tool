@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
 import { NotFoundAppException } from '@shared/infra';
+import { User } from '../../domain/entities/user.entity';
 import { UserResponseDto } from '../dto';
 
 @Injectable()
@@ -19,7 +20,7 @@ export class FindUserByIdUseCase {
     return this.toDto(user);
   }
 
-  private toDto(user: any): UserResponseDto {
+  private toDto(user: User): UserResponseDto {
     return {
       id: user.id,
       firstName: user.firstName,

@@ -13,12 +13,6 @@ message LoginRequest {
 }
 
 message LoginResponse {
-  bool success = 1;
-  string message = 2;
-  LoginData data = 3;
-}
-
-message LoginData {
   string token = 1;
   string refreshToken = 2;
   string userId = 3;
@@ -29,12 +23,6 @@ message RefreshTokenRequest {
 }
 
 message RefreshTokenResponse {
-  bool success = 1;
-  string message = 2;
-  RefreshTokenData data = 3;
-}
-
-message RefreshTokenData {
   string token = 1;
   string refreshToken = 2;
   string userId = 3;

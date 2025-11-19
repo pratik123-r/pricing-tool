@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { IUserRepository } from '../../domain/repositories/user.repository.interface';
+import { User } from '../../domain/entities/user.entity';
 import { UserResponseDto, PaginationQueryDto } from '../dto';
 import { UserPaginationResult } from '../types';
 
@@ -24,7 +25,7 @@ export class FindAllUsersUseCase {
     };
   }
 
-  private toDto(user: any): UserResponseDto {
+  private toDto(user: User): UserResponseDto {
     return {
       id: user.id,
       firstName: user.firstName,

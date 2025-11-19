@@ -17,8 +17,7 @@ export class UserRepository extends BaseRepository<UserEntity, User> implements 
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const ormEntity = await this.repository.findOne({ email });
-    return ormEntity ? ormEntity.toDomain() : null;
+    return super.findOneBy({ email } as any);
   }
 
   async findById(id: string): Promise<User | null> {

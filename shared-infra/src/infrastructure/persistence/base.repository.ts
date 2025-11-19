@@ -25,9 +25,13 @@ export abstract class BaseRepository<
     return ormEntity;
   }
 
-  async findById(id: string): Promise<TDomainEntity | null> {
-    const ormEntity = await this.repository.findOne({ id } as any);
+  protected async findOneBy(criteria: Partial<TOrmEntity>): Promise<TDomainEntity | null> {
+    const ormEntity = await this.repository.findOne(criteria as any);
     return ormEntity ? this.toDomain(ormEntity) : null;
+  }
+
+  async findById(id: string): Promise<TDomainEntity | null> {
+    return this.findOneBy({ id } as any);
   }
 
   async findAll(page: number = 1, limit: number = 10): Promise<{ data: TDomainEntity[]; total: number }> {
